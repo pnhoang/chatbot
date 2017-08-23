@@ -72,12 +72,12 @@ app.post('/webhook', function (req, res) {
 // Incoming events handling
 function receivedMessage(event) {
     var senderID = event.sender.id;
-    var recipientID = event.recipient.id;
+    var recipientId = event.recipient.id;
     var timeOfMessage = event.timestamp;
     var message = event.message;
 
     console.log("Received message for user %d and page %d at %d with message:",
-    senderID, recipientID, timeOfMessage);
+    senderID, recipientId, timeOfMessage);
     console.log(JSON.stringify(message));
 
     var messageId = message.mid;
@@ -90,11 +90,12 @@ function receivedMessage(event) {
         // and send back the template example. Otherwise, just echo the text we received.
         switch (messageText) {
             case 'generic':
-            sendGenericMessage(senderID);
-            break;
-
+                sendGenericMessage(senderID);
+                break;
+            case 'start':
+                sendInitialQuestion(senderID);
             default:
-            sendTextMessage(senderID, messageText);
+                sendTextMessage(senderID, messageText);
         }
     } else if (messageAttachments) {
         sendTextMessage(senderID, "Message with attachment received");
@@ -103,7 +104,7 @@ function receivedMessage(event) {
 
 function receivedPostback(event) {
     var senderID = event.sender.id;
-    var recipientID = event.recipient.id;
+    var recipientId = event.recipient.id;
     var timeOfPostback = event.timestamp;
 
     // The 'payload' param is a developer-defined field which is set in a postback
@@ -111,11 +112,56 @@ function receivedPostback(event) {
     var payload = event.postback.payload;
 
     console.log("Received postback for user %d and page %d with payload '%s' " +
-    "at %d", senderID, recipientID, payload, timeOfPostback);
+    "at %d", senderID, recipientId, payload, timeOfPostback);
 
     switch (payload) {
         case 'GET_STARTED_PAYLOAD':
-            sendButtonTemplate(recipientID);
+            sendInitialQuestion(recipientId);
+            break;
+        case 'CUSTOMER_NO_PAYLOAD':
+            var text = "Would you like to save time on Grocery shopping?";
+            var buttons = [
+                {
+                    "type":"postback",
+                    "title":"Definitely",
+                    "payload":"SAVE_TIME_DEFINITELY_PAYLOAD"
+                },
+                {
+                    "type":"postback",
+                    "title":"Not sure",
+                    "payload":"SAVE_TIME_NOT_SURE_PAYLOAD"
+                }]
+            sendButtonTemplate(recipientId, text, buttons);
+            break;
+        case 'SAVE_TIME_DEFINITELY_PAYLOAD':
+            var text = "Do you often cook the same meals and feel stressed out about finding new recipes?";
+            var buttons = [
+                {
+                    "type":"postback",
+                    "title":"Yes exactly",
+                    "payload":"STRESS_YES_PAYLOAD"
+                },
+                {
+                    "type":"postback",
+                    "title":"Not sure",
+                    "payload":"STRESS_NO_PAYLOAD"
+                }]
+            sendButtonTemplate(recipientId, text, buttons);
+            break;
+        case 'SAVE_TIME_DEFINITELY_PAYLOAD':
+            var text = "What about improving your cooking skills and discovering new ingredients?";
+            var buttons = [
+                {
+                    "type":"postback",
+                    "title":"That's interesting",
+                    "payload":"COOKING_SKILLS_INTERESTING_PAYLOAD"
+                },
+                {
+                    "type":"postback",
+                    "title":"Not sure",
+                    "payload":"STRESS_NO_PAYLOAD"
+                }]
+            sendButtonTemplate(recipientId, text, buttons);
             break;
         default:
             // When a postback is called, we'll send a message back to the sender to
@@ -125,8 +171,23 @@ function receivedPostback(event) {
     }
 }
 
+function sendInitialQuestion(recipientId) {
+    var text = "Are you already a Customer?";
+    var buttons = [
+        {
+            "type":"postback",
+            "title":"YES",
+            "payload":"CUSTOMER_YES_PAYLOAD"
+        },
+        {
+            "type":"postback",
+            "title":"NO",
+            "payload":"CUSTOMER_NO_PAYLOAD"
+        }]
+    sendButtonTemplate(recipientId, text, buttons);
+}
 
-function sendButtonTemplate(recipientId) {
+function sendButtonTemplate(recipientId, text, buttons) {
     var messageData = {
         recipient: {
             id: recipientId
@@ -136,19 +197,8 @@ function sendButtonTemplate(recipientId) {
                 type: "template",
                 payload: {
                     template_type: "button",
-                    "text":"Would you like to save time on grocery shopping?",
-                    "buttons":[
-                    {
-                        "type":"postback",
-                        "title":"Definitely",
-                        "payload":"SAVE_TIME_SHOPPING_DEFINITELY_PAYLOAD"
-                    },
-                    {
-                        "type":"postback",
-                        "title":"Not sure",
-                        "payload":"SAVE_TIME_SHOPPING_NOT_SURE_PAYLOAD"
-                    },
-                    ]
+                    "text": text,
+                    "buttons": buttons
                 }
             }
         }
@@ -158,9 +208,6 @@ function sendButtonTemplate(recipientId) {
 }
 
 
-//////////////////////////
-// Sending helpers
-//////////////////////////
 function sendTextMessage(recipientId, messageText) {
     var messageData = {
         recipient: {
