@@ -122,12 +122,10 @@ function receivedPostback(event) {
             var text = "Would you like to save time on Grocery shopping?";
             var buttons = [
                 {
-                    "type":"postback",
                     "title":"Definitely",
                     "payload":"SAVE_TIME_DEFINITELY_PAYLOAD"
                 },
                 {
-                    "type":"postback",
                     "title":"Not sure",
                     "payload":"SAVE_TIME_NOT_SURE_PAYLOAD"
                 }]
@@ -137,30 +135,43 @@ function receivedPostback(event) {
             var text = "Do you often cook the same meals and feel stressed out about finding new recipes?";
             var buttons = [
                 {
-                    "type":"postback",
                     "title":"Yes exactly",
                     "payload":"STRESS_YES_PAYLOAD"
                 },
                 {
-                    "type":"postback",
                     "title":"Not sure",
                     "payload":"STRESS_NO_PAYLOAD"
                 }]
             sendButtonTemplate(senderID, text, buttons);
             break;
-        case 'SAVE_TIME_DEFINITELY_PAYLOAD':
+        case 'STRESS_YES_PAYLOAD':
             var text = "What about improving your cooking skills and discovering new ingredients?";
             var buttons = [
                 {
-                    "type":"postback",
                     "title":"That's interesting",
                     "payload":"COOKING_SKILLS_INTERESTING_PAYLOAD"
                 },
                 {
-                    "type":"postback",
                     "title":"Not sure",
-                    "payload":"STRESS_NO_PAYLOAD"
+                    "payload":"COOKING_SKILLS_NOT_SURE_PAYLOAD"
                 }]
+            sendButtonTemplate(senderID, text, buttons);
+            break;
+        case 'COOKING_SKILLS_INTERESTING_PAYLOAD':
+            var text = "How many people do you normally cook for?";
+            var buttons = [
+                {
+                    "title":"2",
+                    "payload":"2_PEOPLE_PAYLOAD"
+                },
+                {
+                    "title":"3",
+                    "payload":"3_PEOPLE_PAYLOAD"
+                },
+                {
+                    "title":"4",
+                    "payload":"4_PEOPLE_PAYLOAD"
+                },]
             sendButtonTemplate(senderID, text, buttons);
             break;
         default:
@@ -175,12 +186,10 @@ function sendInitialQuestion(recipientId) {
     var text = "Are you already a Customer?";
     var buttons = [
         {
-            "type":"postback",
             "title":"YES",
             "payload":"CUSTOMER_YES_PAYLOAD"
         },
         {
-            "type":"postback",
             "title":"NO",
             "payload":"CUSTOMER_NO_PAYLOAD"
         }]
@@ -188,6 +197,10 @@ function sendInitialQuestion(recipientId) {
 }
 
 function sendButtonTemplate(recipientId, text, buttons) {
+    buttons.map(element => {
+        element["type"] = "postback";
+        return element;
+    });
     var messageData = {
         recipient: {
             id: recipientId
