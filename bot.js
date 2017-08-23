@@ -131,7 +131,7 @@ function receivedPostback(event) {
                     "title":"Not sure",
                     "payload":"SAVE_TIME_NOT_SURE_PAYLOAD"
                 }]
-            sendButtonTemplate(recipientId, text, buttons);
+            sendButtonTemplate(senderID, text, buttons);
             break;
         case 'SAVE_TIME_DEFINITELY_PAYLOAD':
             var text = "Do you often cook the same meals and feel stressed out about finding new recipes?";
@@ -146,7 +146,7 @@ function receivedPostback(event) {
                     "title":"Not sure",
                     "payload":"STRESS_NO_PAYLOAD"
                 }]
-            sendButtonTemplate(recipientId, text, buttons);
+            sendButtonTemplate(senderID, text, buttons);
             break;
         case 'SAVE_TIME_DEFINITELY_PAYLOAD':
             var text = "What about improving your cooking skills and discovering new ingredients?";
@@ -161,7 +161,7 @@ function receivedPostback(event) {
                     "title":"Not sure",
                     "payload":"STRESS_NO_PAYLOAD"
                 }]
-            sendButtonTemplate(recipientId, text, buttons);
+            sendButtonTemplate(senderID, text, buttons);
             break;
         default:
             // When a postback is called, we'll send a message back to the sender to
