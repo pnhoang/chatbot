@@ -116,7 +116,7 @@ function receivedPostback(event) {
 
     switch (payload) {
         case 'GET_STARTED_PAYLOAD':
-            sendInitialQuestion(recipientId);
+            sendInitialQuestion(senderID);
             break;
         case 'CUSTOMER_NO_PAYLOAD':
             var text = "Would you like to save time on Grocery shopping?";
@@ -129,6 +129,15 @@ function receivedPostback(event) {
                     "title":"Not sure",
                     "payload":"SAVE_TIME_NOT_SURE_PAYLOAD"
                 }]
+            sendButtonTemplate(senderID, text, buttons);
+            break;
+        case 'CUSTOMER_YES_PAYLOAD':
+            var text = "You'll need to log in to your HelloFresh's account so I can further help you";
+            var buttons = [
+                {
+                    "title":"LOGIN",
+                    "payload":"LOGIN_PAYLOAD"
+                },]
             sendButtonTemplate(senderID, text, buttons);
             break;
         case 'SAVE_TIME_DEFINITELY_PAYLOAD':
@@ -174,10 +183,49 @@ function receivedPostback(event) {
                 },]
             sendButtonTemplate(senderID, text, buttons);
             break;
+
         default:
             // When a postback is called, we'll send a message back to the sender to
             // let them know it was successful
-            sendTextMessage(senderID, "Postback called");
+
+            if (payload.indexOf("PEOPLE_PAYLOAD") !== -1) {
+                var text = "How often per week would you like your dinner planning to be taking care of?";
+                var buttons = [
+                    {
+                        "title":"2",
+                        "payload":"2_MEALS_PAYLOAD"
+                    },
+                    {
+                        "title":"3",
+                        "payload":"3_MEALS_PAYLOAD"
+                    },
+                    {
+                        "title":"4",
+                        "payload":"4_MEALS_PAYLOAD"
+                    },]
+                sendButtonTemplate(senderID, text, buttons);
+            }
+
+            else if (payload.indexOf("MEALS_PAYLOAD") !== -1) {
+                var text = "Great! We might have something for you:-) Check out our this plan";
+                var buttons = [
+                    {
+                        "title":"CLASSIC PLAN",
+                        "payload":"CLASSIC_PLAN_PAYLOAD"
+                    },
+                    {
+                        "title":"VEGGIE PLAN",
+                        "payload":"VEGGIE_PLAN_PAYLOAD"
+                    },
+                    {
+                        "title":"FAMILY PLAN",
+                        "payload":"FAMILY_PLAN_PAYLOAD"
+                    },]
+                sendButtonTemplate(senderID, text, buttons);
+            }
+            else {
+                sendTextMessage(senderID, "Postback called");
+            }
             break;
     }
 }
