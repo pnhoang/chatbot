@@ -88,9 +88,9 @@ function receivedMessage(event) {
     if (messageText) {
         // If we receive a text message, check to see if it matches a keyword
         // and send back the template example. Otherwise, just echo the text we received.
-        switch (messageText) {
-            case 'generic':
-                sendGenericMessage(senderID);
+        switch (messageText.toLowerCase()) {
+            case 'plan':
+                sendSelectPlanMessage(senderID);
                 break;
             case 'start':
                 sendInitialQuestion(senderID);
@@ -119,7 +119,7 @@ function receivedPostback(event) {
             sendInitialQuestion(senderID);
             break;
         case 'CUSTOMER_NO_PAYLOAD':
-            var text = "Would you like to save time on Grocery shopping?";
+            var text = "Would you like to save time on Grocery shopping? https://l.messenger.com/l.php?u=https%3A%2F%2Fscontent-ams3-1.xx.fbcdn.net%2Fv%2Ft34.0-12%2F19075076_462707337446892_253456460_n.gif%3Ffallback%3D1%26oh%3Df67b875076d8eddd55e5d57e7b758355%26oe%3D59A09BB3&h=ATOud96RXwZGYDa2Pk4VPTte8TZdotyNRGuFM3NqEI_4ed2nhB8n_XvDC4kDUMwN5uPFaU6I_xt6ysDGdbMPYiWphWHxJNKzfp2-zhVvllu1-A110N9zOWufU3VldJty9IvuevcEob6uYkvD";
             var buttons = [
                 {
                     "title":"Definitely",
@@ -141,7 +141,7 @@ function receivedPostback(event) {
             sendButtonTemplate(senderID, text, buttons);
             break;
         case 'SAVE_TIME_DEFINITELY_PAYLOAD':
-            var text = "Do you often cook the same meals and feel stressed out about finding new recipes?";
+            var text = "Do you often cook the same meals and feel stressed out about finding new recipes? ";
             var buttons = [
                 {
                     "title":"Yes exactly",
@@ -282,7 +282,7 @@ function sendTextMessage(recipientId, messageText) {
     callSendAPI(messageData);
 }
 
-function sendGenericMessage(recipientId) {
+function sendSelectPlanMessage(recipientId) {
     var messageData = {
         recipient: {
             id: recipientId
@@ -293,34 +293,36 @@ function sendGenericMessage(recipientId) {
                 payload: {
                     template_type: "generic",
                     elements: [{
-                        title: "rift",
-                        subtitle: "Next-generation virtual reality",
-                        item_url: "https://www.oculus.com/en-us/rift/",
-                        image_url: "http://messengerdemo.parseapp.com/img/rift.png",
+                        title: "Classic Plan",
+                        subtitle: "Our widest variety of meat, fish, and seasonal produce for those craving a bit more variety.",
+                        item_url: "https://www.hellofresh.com/checkout/finish/address/",
+                        image_url: "https://cdn.hellofresh.com/us/cms/bags/img/2-person-c-3-desktop-shop2x_AB.jpg",
                         buttons: [{
                             type: "web_url",
-                            url: "https://www.oculus.com/en-us/rift/",
-                            title: "Open Web URL"
-                        }, {
-                            type: "postback",
-                            title: "Call Postback",
-                            payload: "Payload for first bubble",
+                            url: "https://www.hellofresh.com/checkout/finish/address/",
+                            title: "Select this Plan"
                         }],
                     }, {
-                        title: "touch",
-                        subtitle: "Your Hands, Now in VR",
-                        item_url: "https://www.oculus.com/en-us/touch/",
-                        image_url: "http://messengerdemo.parseapp.com/img/touch.png",
+                        title: "Veggie Plan",
+                        subtitle: "Vegetarian recipes with plant-based proteins, grains, and seasonal produce.",
+                        item_url: "https://www.hellofresh.com/checkout/finish/address/",
+                        image_url: "https://cdn.hellofresh.com/us/cms/bags/img/2-person-veggiec-3-desktop-shop2x.jpg",
                         buttons: [{
                             type: "web_url",
-                            url: "https://www.oculus.com/en-us/touch/",
-                            title: "Open Web URL"
-                        }, {
-                            type: "postback",
-                            title: "Call Postback",
-                            payload: "Payload for second bubble",
-                        }]
-                    }]
+                            url: "https://www.hellofresh.com/checkout/finish/address/",
+                            title: "Select this Plan"
+                        }],
+                    }, {
+                        title: "Family Plan",
+                        subtitle: "Quick and easy family meals that pack in all the YUM-worthy flavor the whole family loves.",
+                        item_url: "https://www.hellofresh.com/checkout/finish/address/",
+                        image_url: "https://cdn.hellofresh.com/us/cms/bags/img/family-2-desktop-shop2x_AB.jpg",
+                        buttons: [{
+                            type: "web_url",
+                            url: "https://www.hellofresh.com/checkout/finish/address/",
+                            title: "Select this Plan"
+                        }],
+                    },]
                 }
             }
         }
