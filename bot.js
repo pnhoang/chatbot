@@ -119,7 +119,7 @@ function receivedPostback(event) {
             sendInitialQuestion(senderID);
             break;
         case 'CUSTOMER_NO_PAYLOAD':
-            var text = "Would you like to save time on Grocery shopping? https://l.messenger.com/l.php?u=https%3A%2F%2Fscontent-ams3-1.xx.fbcdn.net%2Fv%2Ft34.0-12%2F19075076_462707337446892_253456460_n.gif%3Ffallback%3D1%26oh%3Df67b875076d8eddd55e5d57e7b758355%26oe%3D59A09BB3&h=ATOud96RXwZGYDa2Pk4VPTte8TZdotyNRGuFM3NqEI_4ed2nhB8n_XvDC4kDUMwN5uPFaU6I_xt6ysDGdbMPYiWphWHxJNKzfp2-zhVvllu1-A110N9zOWufU3VldJty9IvuevcEob6uYkvD";
+            var text = "Would you like to save time on Grocery shopping?";
             var buttons = [
                 {
                     "title":"Definitely",
@@ -136,10 +136,14 @@ function receivedPostback(event) {
             var buttons = [
                 {
                     "title":"LOGIN",
-                    "payload":"LOGIN_PAYLOAD"
+                    "payload":"LOGIN_SELECT_PAYLOAD"
                 },]
             sendButtonTemplate(senderID, text, buttons);
             break;
+        // case 'LOGIN_SELECT_PAYLOAD':
+
+        //     break;
+
         case 'SAVE_TIME_DEFINITELY_PAYLOAD':
             var text = "Do you often cook the same meals and feel stressed out about finding new recipes? ";
             var buttons = [
